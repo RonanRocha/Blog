@@ -5,27 +5,27 @@ Esse projeto é uma forma de me forçar a estudar conceitos além do CRUD no ASP
 
 Alguns conceitos que pretendo implementar nessa API :
 
-> JWT AUTHENTICATION
-> AUTHORIZATION (ROLE BASED | RESOURCE BASED | POLICY BASED)
-> MFA
-> API VERSIONING
-> HATEOS
-> CACHE DISTRIBUÍDO COM REDIS 
-> API GATEWAY 
+- JWT AUTHENTICATION
+- AUTHORIZATION (ROLE BASED | RESOURCE BASED | POLICY BASED)
+- MFA
+- API VERSIONING
+- HATEOS
+- CACHE DISTRIBUÍDO COM REDIS 
+- API GATEWAY 
     > REDIRECT REQUESTS | RATE LIMIT ETC...
-> BACKGROUND JOBS (HANG FIRE OU QUARTZ)   
-> INTEGRATION TESTS 
-> CI / CD (GITHUB ACTIONS)
-> DOCKER AND K8S
+- BACKGROUND JOBS (HANG FIRE OU QUARTZ)   
+- INTEGRATION TESTS 
+- CI / CD (GITHUB ACTIONS)
+- DOCKER AND K8S
 
  Fique a vontade para deixar uma sugestão de estudo para que eu possa melhorar.
 
 
 Em breve será feito a dockerização da aplicação com todos containers que estou usando:
 
-> MailHoc Para envio de e-mail
-> SQL SERVER para banco de dados 
-> Redis para cache
+- MailHoc Para envio de e-mail
+- SQL SERVER para banco de dados 
+- Redis para cache
 
 
 Abaixo um exemplo de como configurar seu secret | appsettings.json
