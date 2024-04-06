@@ -51,7 +51,7 @@ namespace Blog.Application.Core.Posts.Handlers
                 
                 await _postRepository.RemoveAsync(post);
 
-                await _fileHandler.DeleteFileAsync(filePath);
+                await _fileHandler.DeleteFileAsync("Uploads/Posts/",filePath);
 
                 return response = new PostCommandResponse
                 {

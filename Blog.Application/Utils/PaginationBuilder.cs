@@ -4,7 +4,7 @@ using Blog.Application.Response;
 
 namespace Blog.Application.Utils
 {
-    public class PaginationHelper
+    public class PaginationBuilder
     {
         public static PagedResponse<List<T>> CreatePagedReponse<T>(List<T> pagedData, PaginationFilter validFilter, int totalRecords, IUriService uriService, string route)
         {

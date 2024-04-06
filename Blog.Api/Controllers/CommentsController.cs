@@ -2,6 +2,7 @@
 using Blog.Application.Core.Comments.Response;
 using Blog.Application.Core.Services.Interfaces;
 using Blog.Application.Core.ViewModels;
+using Blog.Application.Filters;
 using Blog.Application.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,14 @@ namespace Blog.Api.Controllers
 
         [HttpGet("Post/{postId:int}")]
         [Authorize]
-        public async Task<IActionResult> GetCommentsByPostId(int postId)
+        public async Task<IActionResult> GetCommentsByPostId(int postId, [FromQuery] PaginationFilter filter)
         {
-            IEnumerable<CommentViewModel> comments = await _commentService.GetCommentsByPostIdAsync(postId);
+            if (filter.PageNumber <= 0 || filter.PageSize <= 0)
+                return BadRequest("Validation error");
 
-            return Ok(comments);
+            PagedResponse<List<CommentViewModel>> comments = await _commentService.GetCommentsByPostIdAsync(postId, filter);
+
+            return GetActionResult(comments);
         }
 
         [HttpPost]
@@ -80,6 +84,8 @@ namespace Blog.Api.Controllers
                     return BadRequest(response);
                 case StatusCodes.Status401Unauthorized:
                     return Unauthorized(response);
+                case StatusCodes.Status404NotFound:
+                    return NotFound(response);
                 case StatusCodes.Status500InternalServerError:
                     return StatusCode(StatusCodes.Status500InternalServerError);
                 default:

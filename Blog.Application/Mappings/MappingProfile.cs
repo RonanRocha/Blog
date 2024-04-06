@@ -15,6 +15,7 @@ namespace Blog.Application.Mappings
             CreateMap<Post, PostViewModel>().ReverseMap();
             CreateMap<Category, CategoryViewModel>().ReverseMap();
             CreateMap<PagedResponse<List<Post>>, PagedResponse<List<PostViewModel>>>().ReverseMap();
+            CreateMap<PagedResponse<List<Comment>>, PagedResponse<List<CommentViewModel>>>().ReverseMap();
             CreateMap<Comment, CommentViewModel>().ReverseMap();
             CreateMap<User,UserViewModel>().ReverseMap();
             CreateMap<LoginCommand,Login>().ReverseMap();   

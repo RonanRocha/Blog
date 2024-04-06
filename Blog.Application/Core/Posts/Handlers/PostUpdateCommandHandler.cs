@@ -55,9 +55,9 @@ namespace Blog.Application.Core.Posts.Handlers
                     Message = "Post not found"
                 };
 
-                var pathUpload = Path.Combine(_fileHandler.BasePath, "Uploads/");
+              
 
-                UploadResult uploadResult = await _fileHandler.UpdateImageAsync(post.Image, request.Image, Path.Combine(pathUpload, "Posts/"));
+                UploadResult uploadResult = await _fileHandler.UpdateImageAsync(post.Image, request.Image);
 
                 if (!uploadResult.IsValid) return response = new PostCommandResponse
                 {

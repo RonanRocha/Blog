@@ -7,6 +7,7 @@ namespace Blog.Application.Core.Repositories
     {
         Task RemoveAsync(Post post);
         Task<List<Post>> GetAllPaged(int pageNumber, int pageSize);
+        Task<int> CountAsync();
 
       
     }

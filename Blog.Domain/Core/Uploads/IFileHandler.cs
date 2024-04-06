@@ -3,9 +3,10 @@
     public interface IFileHandler
     {
         public string BasePath { get; }
-        Task<UploadResult> UploadAsync(string base64File, string path);
-        Task<bool> DeleteFileAsync(string path);
-        Task<UploadResult> UpdateImageAsync(string oldImage,  string newImage, string path);
+        public string HostUrl { get; }
+        Task<UploadResult> UploadAsync(string base64File, string directory);
+        Task<bool> DeleteFileAsync(string directory, string file);
+        Task<UploadResult> UpdateImageAsync(string oldImage,  string newImage);
         bool IsAllowedMimeType(string base64string);
     }
 }
