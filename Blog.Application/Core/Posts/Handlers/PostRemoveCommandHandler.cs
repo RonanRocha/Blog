@@ -4,7 +4,6 @@ using Blog.Domain.Core.Entities;
 using Blog.Application.Core.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Blog.Domain.Core.Uploads;
 
 namespace Blog.Application.Core.Posts.Handlers
@@ -13,16 +12,14 @@ namespace Blog.Application.Core.Posts.Handlers
     {
         private readonly IPostRepository _postRepository;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IHostingEnvironment _environment;
         private readonly IFileHandler _fileHandler;
 
 
 
-        public PostRemoveCommandHandler(IPostRepository postRepository, IAuthorizationService authorizationService, IHostingEnvironment environment, IFileHandler fileHandler)
+        public PostRemoveCommandHandler(IPostRepository postRepository, IAuthorizationService authorizationService,  IFileHandler fileHandler)
         {
             _postRepository = postRepository;
             _authorizationService = authorizationService;
-            _environment = environment;
             _fileHandler = fileHandler;
         }
 
@@ -49,7 +46,7 @@ namespace Blog.Application.Core.Posts.Handlers
                     Message = "Resource not found"
                 };
 
-                var filePath = Path.Combine(_environment.WebRootPath, @$"Uploads/Posts/{Path.GetFileName(post.Image)}");
+                var filePath = Path.Combine(_fileHandler.BasePath, @$"Uploads/Posts/{Path.GetFileName(post.Image)}");
 
                 
                 await _postRepository.RemoveAsync(post);

@@ -4,6 +4,11 @@ namespace Blog.Infrastructure.Data.Uploads
 {
     public class FileHandler : IFileHandler
     {
+        /// <summary>
+        /// todo: refactor this  move to static class constants system
+        /// </summary>
+        public string BasePath { get;  private set; } = @"D:/projetos/Blog/Blog.Api/wwwroot/";
+
         public async Task<UploadResult> UploadAsync(string file, string path)
         {
             try
@@ -33,7 +38,7 @@ namespace Blog.Infrastructure.Data.Uploads
 
                 await fs.WriteAsync(bytes, 0, bytes.Length);
 
-                string publicDirectory =  "Uploads/Posts";
+                string publicDirectory =  Path.Combine(BasePath,"Uploads/Posts/");
 
                 return new UploadResult
                 {
@@ -88,6 +93,15 @@ namespace Blog.Infrastructure.Data.Uploads
             }
 
             return Task.FromResult(false);
+        }
+        public async Task<UploadResult> UpdateImageAsync(string oldImage, string newImage, string path)
+        {
+            bool isDeleted = await DeleteFileAsync(oldImage);
+
+            if (isDeleted)
+                return  await UploadAsync(newImage, path);
+
+            return new UploadResult { IsValid = false };
         }
     }
 }

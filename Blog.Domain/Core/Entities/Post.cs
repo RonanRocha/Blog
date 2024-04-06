@@ -25,10 +25,12 @@
         {
             UserId = userId;
             CategoryId = categoryId;
-            Image = image;
             Title = title;
             Content = content;
             UpdatedAt = DateTime.UtcNow;
+            
+            if(!String.IsNullOrEmpty(image))
+                Image = image;
 
         }
 

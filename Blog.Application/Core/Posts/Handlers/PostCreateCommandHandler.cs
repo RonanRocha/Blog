@@ -35,10 +35,10 @@ namespace Blog.Application.Core.Posts.Handlers
             try
             {
 
-                var pathUpload = Path.Combine(_environment.WebRootPath, "Uploads");
+                var pathUpload = Path.Combine(_environment.WebRootPath, "Uploads/");
                
 
-                UploadResult result = await _uploadFileHandler.UploadAsync(request.Image, Path.Combine(pathUpload, "Posts"));
+                UploadResult result = await _uploadFileHandler.UploadAsync(request.Image, Path.Combine(pathUpload, "Posts/"));
 
                 if (!result.IsValid) return new PostCommandResponse
                 {
