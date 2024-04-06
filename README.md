@@ -62,7 +62,6 @@ Abaixo um exemplo de como configurar seu secret | appsettings.json
       "Roles": [ "User" ]
     }
   }
-
 }
 
  ```
