@@ -12,23 +12,24 @@ namespace Blog.Application.Core.Posts.Handlers
 {
     public class PostUpdateCommandHandler : IRequestHandler<PostUpdateCommand, PostCommandResponse>
     {
-        private IAuthorizationService _authorizationService;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IPostRepository _postRepository;
-        IValidator<Post> _validator;
-        private IFileHandler _fileHandler;
+        private readonly IValidator<Post> _validator;
+        private readonly IFileHandler _fileHandler;
 
 
-        public PostUpdateCommandHandler(IPostRepository postRepository,
+        public PostUpdateCommandHandler
+        (
+            IPostRepository postRepository,
             IValidator<Post> validator,
             IAuthorizationService authorizationService,
             IFileHandler fileHandler
-          )
+        )
         {
             _postRepository = postRepository;
             _validator = validator;
             _authorizationService = authorizationService;
             _fileHandler = fileHandler;
-    
         }
 
         public async Task<PostCommandResponse> Handle(PostUpdateCommand request, CancellationToken cancellationToken)
