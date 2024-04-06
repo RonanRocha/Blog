@@ -23,28 +23,30 @@ namespace Blog.Application.Core.Posts.Handlers
 
         public async Task<PagedResponse<List<Post>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
         {
-            string route = _contextAccessor.HttpContext.Request.Path;
-
-            var posts = await _postRepository.GetAll();
-
-            var postsPaged = await _postRepository.GetAllPaged(pageSize: request.PageSize, pageNumber: request.PageNumber);
 
             PagedResponse<List<Post>> paginated;
 
-            if (postsPaged.Count == 0) return paginated = new PagedResponse<List<Post>>
-            {
-                StatusCode = 404,
-                IsValid = false,
-                Message = "Resource not found",
-            };
-
             try
             {
-                paginated = PaginationHelper
+
+                string route = _contextAccessor.HttpContext.Request.Path;
+
+                int totalPosts = await _postRepository.CountAsync();
+
+                if (totalPosts <= 0) return paginated = new PagedResponse<List<Post>>
+                {
+                    StatusCode = 404,
+                    IsValid = false,
+                    Message = "Resource not found",
+                };
+
+                var postsPaged = await _postRepository.GetAllPaged(pageSize: request.PageSize, pageNumber: request.PageNumber);
+
+                paginated = PaginationBuilder
                            .CreatePagedReponse(
                               postsPaged,
                               new Filters.PaginationFilter(request.PageNumber, request.PageSize),
-                              posts.Count,
+                              totalPosts,
                               _uriService,
                               route
                             );

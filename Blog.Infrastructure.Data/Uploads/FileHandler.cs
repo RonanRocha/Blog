@@ -4,12 +4,11 @@ namespace Blog.Infrastructure.Data.Uploads
 {
     public class FileHandler : IFileHandler
     {
-        /// <summary>
-        /// todo: refactor this  move to static class constants system
-        /// </summary>
-        public string BasePath { get;  private set; } = @"D:/projetos/Blog/Blog.Api/wwwroot/";
 
-        public async Task<UploadResult> UploadAsync(string file, string path)
+        public string BasePath { get;  private set; } = "D:/projetos/Blog/Blog.Api/wwwroot/";
+        public string HostUrl { get; set; } = "https://localhost:7093/";
+
+        public async Task<UploadResult> UploadAsync(string file, string directory)
         {
             try
             {      
@@ -32,13 +31,20 @@ namespace Blog.Infrastructure.Data.Uploads
 
                 string fileName = Guid.NewGuid().ToString() + ".jpg";
 
-                string uploadedPath = Path.Combine(path, fileName);
+                string uploadPath = Path.Combine(BasePath, directory);
 
-                using FileStream fs = new FileStream(uploadedPath, FileMode.Create, FileAccess.Write);
+                if (!Directory.Exists(uploadPath)) 
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                string filePath = Path.Combine(uploadPath, fileName);
+
+                using FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
 
                 await fs.WriteAsync(bytes, 0, bytes.Length);
 
-                string publicDirectory =  Path.Combine(BasePath,"Uploads/Posts/");
+                string publicDirectory =  Path.Combine(HostUrl,"Uploads/Posts/");
 
                 return new UploadResult
                 {
@@ -51,7 +57,6 @@ namespace Blog.Infrastructure.Data.Uploads
                 return new UploadResult
                 {
                     IsValid = false,
-
                 };
             }
         }
@@ -84,22 +89,32 @@ namespace Blog.Infrastructure.Data.Uploads
             var base64 = base64String.Replace("=", "");
             return Convert.ToInt32(base64.Length * (3 / 4));
         }
-        public Task<bool> DeleteFileAsync(string path)
-        {   
-            if (File.Exists(path))
+        public Task<bool> DeleteFileAsync(string directory, string file)
+        {
+            var path = new string[]
             {
-                File.Delete(path);
+                BasePath,
+                directory,
+                file
+            };
+
+            string filePath = Path.Combine(path);
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
                 return Task.FromResult(true);
             }
 
             return Task.FromResult(false);
         }
-        public async Task<UploadResult> UpdateImageAsync(string oldImage, string newImage, string path)
+        public async Task<UploadResult> UpdateImageAsync(string oldImage, string newImage)
         {
-            bool isDeleted = await DeleteFileAsync(oldImage);
+            var filePath = Path.GetFileName(oldImage);
+            bool isDeleted = await DeleteFileAsync("Uploads/Posts/", filePath);
 
             if (isDeleted)
-                return  await UploadAsync(newImage, path);
+                return  await UploadAsync(newImage, "Uploads/Posts/");
 
             return new UploadResult { IsValid = false };
         }

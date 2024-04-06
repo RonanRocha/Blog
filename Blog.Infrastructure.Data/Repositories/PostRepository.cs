@@ -12,6 +12,11 @@ namespace Blog.Infrastructure.Data.Repositories
 
         }
 
+        public async Task<int> CountAsync()
+        {
+           return  await _ctx.Posts.Select(p => p.Id).CountAsync();
+        }
+
         public async Task<List<Post>> GetAllPaged(int pageNumber, int pageSize)
         {
             return await _ctx.Posts.Include(x => x.User)

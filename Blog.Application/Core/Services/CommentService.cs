@@ -6,6 +6,8 @@ using Blog.Application.Core.Services.Interfaces;
 using Blog.Application.Core.ViewModels;
 using Blog.Domain.Core.Entities;
 using MediatR;
+using Blog.Application.Filters;
+using Blog.Application.Response;
 
 namespace Blog.Application.Core.Services
 {
@@ -36,10 +38,11 @@ namespace Blog.Application.Core.Services
             return await _mediator.Send(command);
         }
 
-        public async Task<IEnumerable<CommentViewModel>> GetCommentsByPostIdAsync(int postId)
+        public async Task<PagedResponse<List<CommentViewModel>>> GetCommentsByPostIdAsync(int postId, PaginationFilter filter)
         {
-            IEnumerable<Comment> comments = await _mediator.Send(new GetCommentByPostIdQuery(postId));
-            return _mapper.Map<IEnumerable<CommentViewModel>>(comments);
+            PaginationFilter validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            PagedResponse<List<Comment>> comments = await _mediator.Send(new GetCommentByPostIdQuery(postId, validFilter.PageNumber, validFilter.PageSize));
+            return _mapper.Map<PagedResponse<List<CommentViewModel>>>(comments);
         }
 
     }

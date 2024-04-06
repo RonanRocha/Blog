@@ -1,15 +1,21 @@
-﻿using Blog.Domain.Core.Entities;
+﻿using Blog.Application.Response;
+using Blog.Domain.Core.Entities;
 using MediatR;
 
 namespace Blog.Application.Core.Comments.Queries
 {
-    public class GetCommentByPostIdQuery : IRequest<IEnumerable<Comment>>
+    public class GetCommentByPostIdQuery : IRequest<PagedResponse<List<Comment>>>
     {
-        public GetCommentByPostIdQuery(int id)
+        public GetCommentByPostIdQuery(int postId, int pageNumber, int pageSize)
         {
-            Id = id;
+            PostId = postId;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+
         }
 
-        public int Id { get; set; }
+        public int PostId { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
     }
 }
