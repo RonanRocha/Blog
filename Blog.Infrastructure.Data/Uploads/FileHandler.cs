@@ -1,4 +1,5 @@
 ﻿using Blog.Domain.Core.Uploads;
+using Microsoft.AspNetCore.Http;
 
 namespace Blog.Infrastructure.Data.Uploads
 {
@@ -8,13 +9,15 @@ namespace Blog.Infrastructure.Data.Uploads
         public string BasePath { get;  private set; } = "D:/projetos/Blog/Blog.Api/wwwroot/";
         public string HostUrl { get; set; } = "https://localhost:7093/";
 
-        public async Task<UploadResult> UploadAsync(string file, string directory)
+        private string[] permittedExtensions = { ".jpg", ".jpeg", ".png" };
+
+        public async Task<UploadResult> UploadAsync(IFormFile file, string directory)
         {
             try
-            {      
-                int fileSize = FileSize(file);
+            {
+                
 
-                if (!IsAllowedMimeType(file) || fileSize > (4 * 1024 * 1024))
+                if (!permittedExtensions.Contains(Path.GetExtension(file.FileName)) || file.Length > (4 * 1024 * 1024))
                 {
                     var dictonaryErrors = new Dictionary<string, string[]>
                     {
@@ -27,7 +30,6 @@ namespace Blog.Infrastructure.Data.Uploads
                     };
                 };
 
-                var bytes = Convert.FromBase64String(file);
 
                 string fileName = Guid.NewGuid().ToString() + ".jpg";
 
@@ -42,7 +44,8 @@ namespace Blog.Infrastructure.Data.Uploads
 
                 using FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
 
-                await fs.WriteAsync(bytes, 0, bytes.Length);
+                await file.CopyToAsync(fs);
+              
 
                 string publicDirectory =  Path.Combine(HostUrl,"Uploads/Posts/");
 
@@ -60,35 +63,7 @@ namespace Blog.Infrastructure.Data.Uploads
                 };
             }
         }
-        public bool IsAllowedMimeType(string base64string)
-        {
-            if (string.IsNullOrWhiteSpace(base64string))
-            {
-                return false;
-            }
-
-            string data = base64string.Substring(0, 5);
-
-            switch (data.ToUpper())
-            {
-                case "IVBOR":
-                    //png
-                    return true;
-                    break;
-                case "/9J/4":
-                    //jpg
-                    return true;
-                    break;
-                default:
-                    //other types
-                    return false;
-            }
-        }
-        public int FileSize(string base64String)
-        {
-            var base64 = base64String.Replace("=", "");
-            return Convert.ToInt32(base64.Length * (3 / 4));
-        }
+  
         public Task<bool> DeleteFileAsync(string directory, string file)
         {
             var path = new string[]
@@ -108,7 +83,7 @@ namespace Blog.Infrastructure.Data.Uploads
 
             return Task.FromResult(false);
         }
-        public async Task<UploadResult> UpdateImageAsync(string oldImage, string newImage)
+        public async Task<UploadResult> UpdateImageAsync(string oldImage, IFormFile newImage)
         {
             var filePath = Path.GetFileName(oldImage);
             bool isDeleted = await DeleteFileAsync("Uploads/Posts/", filePath);
