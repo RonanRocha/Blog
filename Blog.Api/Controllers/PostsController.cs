@@ -22,7 +22,7 @@ namespace Blog.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Publisher")]
-        public async Task<IActionResult> Create([FromBody] PostCreateCommand command)
+        public async Task<IActionResult> Create([FromForm] PostCreateCommand command)
         {
              command.AddAuthenticatedUser(User);
              PostCommandResponse response = await  _postService.AddAsync(command);
@@ -53,7 +53,7 @@ namespace Blog.Api.Controllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Publisher")]
-        public async Task<IActionResult> Update([FromBody] PostUpdateCommand command, int id)
+        public async Task<IActionResult> Update([FromForm] PostUpdateCommand command, int id)
         {
             if (command.Id != id && id <= 0) 
                 return BadRequest("Validation error");

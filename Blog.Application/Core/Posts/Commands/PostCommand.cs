@@ -12,7 +12,7 @@ namespace Blog.Application.Core.Posts.Commands
         {
 
         }
-        public PostCommand(int categoryId, string title, string content, string image)
+        public PostCommand(int categoryId, string title, string content, IFormFile image)
         {
             CategoryId = categoryId;
             Title = title;
@@ -24,7 +24,7 @@ namespace Blog.Application.Core.Posts.Commands
         public int CategoryId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public string Image { get; set; }
+        public IFormFile Image { get; set; }
         private string UserId { get;  set; }
         private ClaimsPrincipal User {  get;  set; }
 
