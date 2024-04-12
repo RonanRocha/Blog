@@ -1,10 +1,10 @@
-﻿using Blog.Application.Core.Comments.Response;
+﻿using Blog.Application.Response;
 using MediatR;
 using System.Security.Claims;
 
 namespace Blog.Application.Core.Comments.Commands
 {
-    public class CommentRemoveCommand : IRequest<CommentCommandResponse>
+    public class CommentRemoveCommand : IRequest<ResponseBase>
     {
         public CommentRemoveCommand(int id, ClaimsPrincipal claimsPrincipal)
         {

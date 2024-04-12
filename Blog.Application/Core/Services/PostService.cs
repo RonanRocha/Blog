@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Blog.Application.Core.Posts.Commands;
-using Blog.Application.Core.Posts.Response;
 using Blog.Application.Core.Services.Interfaces;
 using Blog.Application.Core.ViewModels;
 using Blog.Application.Core.Posts.Queries;
@@ -23,9 +22,10 @@ namespace Blog.Application.Core.Services
             _mediator = mediator;
         }
 
-        public async Task<PostCommandResponse> AddAsync(PostCreateCommand command)
+        public async Task<ResponseBase> AddAsync(PostCreateCommand command)
         {
-            return await _mediator.Send(command);
+            return   await _mediator.Send(command);
+            
         }
 
         public async Task<PostViewModel> GetByIdAsync(int id)
@@ -42,13 +42,13 @@ namespace Blog.Application.Core.Services
 
         }
 
-        public async Task<PostCommandResponse> RemoveAsync(PostRemoveCommand command)
+        public async Task<ResponseBase> RemoveAsync(PostRemoveCommand command)
         {
             var result = await _mediator.Send(command);
             return result;
         }
 
-        public async Task<PostCommandResponse> UpdateAsync(PostUpdateCommand command)
+        public async Task<ResponseBase> UpdateAsync(PostUpdateCommand command)
         {
             return await _mediator.Send(command);
         }

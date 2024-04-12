@@ -1,48 +1,34 @@
 ﻿using Blog.Application.Core.Categories.Commands;
-using Blog.Application.Core.Categories.Response;
 using Blog.Domain.Core.Repositories;
 using Blog.Domain.Core.Entities;
-using FluentValidation;
 using MediatR;
-using FluentValidation.Results;
+using Blog.Application.Response;
 
 namespace Blog.Application.Core.Categories.Handlers
 {
-    public class CategoryCreateCommandHandler : IRequestHandler<CategoryCreateCommand, CategoryCommandResponse>
+    public class CategoryCreateCommandHandler : IRequestHandler<CategoryCreateCommand, ResponseBase>
     {
 
         private ICategoryRepository _categoryRepository;
-        private IValidator<Category> _validator;
 
-        public CategoryCreateCommandHandler(ICategoryRepository categoryRepository, IValidator<Category> validator)
+        public CategoryCreateCommandHandler(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
-            _validator = validator;
         }
 
 
-        public async Task<CategoryCommandResponse> Handle(CategoryCreateCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(CategoryCreateCommand request, CancellationToken cancellationToken)
         {
 
-            CategoryCommandResponse response;
+            ResponseBase response;
 
             try
             {
                 Category category = new Category(request.Name);
 
-                ValidationResult vr = await _validator.ValidateAsync(category);
-
-                if (!vr.IsValid) return response = new CategoryCommandResponse
-                {
-                    IsValid = false,
-                    StatusCode = 400,
-                    Message = "Validation error",
-                    Errors = vr.ToDictionary()
-                };
-
                 await _categoryRepository.Save(category);
 
-                return response = new CategoryCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = true,
                     StatusCode = 201,
@@ -51,7 +37,7 @@ namespace Blog.Application.Core.Categories.Handlers
 
             }catch (Exception ex)
             {
-                return response = new CategoryCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 500,

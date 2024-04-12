@@ -1,26 +1,26 @@
 ﻿using Blog.Application.Core.Categories.Commands;
-using Blog.Application.Core.Categories.Response;
+using Blog.Application.Response;
 using Blog.Domain.Core.Entities;
 using Blog.Domain.Core.Repositories;
 using MediatR;
 
 namespace Blog.Application.Core.Categories.Handlers
 {
-    public class CategoryRemoveCommandHandler : IRequestHandler<CategoryRemoveCommand, CategoryCommandResponse>
+    public class CategoryRemoveCommandHandler : IRequestHandler<CategoryRemoveCommand, ResponseBase>
     {
         private ICategoryRepository _categoryRepository;
         public CategoryRemoveCommandHandler(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
-        public async Task<CategoryCommandResponse> Handle(CategoryRemoveCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(CategoryRemoveCommand request, CancellationToken cancellationToken)
         {
-            CategoryCommandResponse response;
+            ResponseBase response;
             try
             {
                 Category category = await _categoryRepository.GetById(request.Id);
 
-                if (category == null) return response = new CategoryCommandResponse
+                if (category == null) return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 404,
@@ -30,7 +30,7 @@ namespace Blog.Application.Core.Categories.Handlers
                 await _categoryRepository.RemoveAsync(category);
 
 
-                return response = new CategoryCommandResponse
+                return response = new ResponseBase
                 {
                     StatusCode = 200,
                     IsValid = true,
@@ -41,7 +41,7 @@ namespace Blog.Application.Core.Categories.Handlers
             }
             catch (Exception ex)
             {
-                return response = new CategoryCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 500,

@@ -1,10 +1,10 @@
-﻿using Blog.Application.Core.Comments.Response;
+﻿using Blog.Application.Response;
 using MediatR;
 using System.Security.Claims;
 
 namespace Blog.Application.Core.Comments.Commands
 {
-    public class CommentUpdateCommand : IRequest<CommentCommandResponse>
+    public class CommentUpdateCommand : IRequest<ResponseBase>
     {
         public int Id { get; set; }
         public string Message { get; set; }

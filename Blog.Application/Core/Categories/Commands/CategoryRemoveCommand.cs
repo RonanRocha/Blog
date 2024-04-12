@@ -1,10 +1,10 @@
-﻿using Blog.Application.Core.Categories.Response;
+﻿using Blog.Application.Response;
 using MediatR;
 using System.Security.Claims;
 
 namespace Blog.Application.Core.Categories.Commands
 {
-    public class CategoryRemoveCommand : IRequest<CategoryCommandResponse>
+    public class CategoryRemoveCommand : IRequest<ResponseBase>
     {
         public int Id { get; set; }
         private ClaimsPrincipal ClaimsPrincipal { get; set; }

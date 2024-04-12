@@ -1,33 +1,29 @@
 ﻿using Blog.Application.Core.Comments.Commands;
-using Blog.Application.Core.Comments.Response;
+using Blog.Application.Response;
 using Blog.Domain.Core.Entities;
 using Blog.Domain.Core.Repositories;
-using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 namespace Blog.Application.Core.Comments.Handlers
 {
-    public class CommentUpdateCommandHandler : IRequestHandler<CommentUpdateCommand, CommentCommandResponse>
+    public class CommentUpdateCommandHandler : IRequestHandler<CommentUpdateCommand, ResponseBase>
     {
 
         private readonly ICommentRepository _commentRepository;
-        private readonly IValidator<Comment> _validator;
 
-        public CommentUpdateCommandHandler(ICommentRepository commentRepository, IValidator<Comment> validator)
+        public CommentUpdateCommandHandler(ICommentRepository commentRepository)
         {
             _commentRepository = commentRepository;
-            _validator = validator;
         }
-        public async Task<CommentCommandResponse> Handle(CommentUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(CommentUpdateCommand request, CancellationToken cancellationToken)
         {
-            CommentCommandResponse response;
+            ResponseBase response;
 
             try
             {
                 Comment comment = await _commentRepository.GetById(request.Id);
 
-                if (comment == null) return response = new CommentCommandResponse
+                if (comment == null) return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 404,
@@ -36,21 +32,12 @@ namespace Blog.Application.Core.Comments.Handlers
 
                 comment.Update(message: request.Message);
 
-                ValidationResult vr = _validator.Validate(comment);
-
-                if (!vr.IsValid) return response = new CommentCommandResponse
-                {
-                    IsValid = vr.IsValid,
-                    Message = "Validation Error",
-                    StatusCode = 400,
-                    Errors = vr.ToDictionary()
-                };
 
                 await _commentRepository.Update(comment);
 
-                return response = new CommentCommandResponse
+                return response = new ResponseBase
                 {
-                    IsValid = vr.IsValid,
+                    IsValid = true,
                     Message = "Comment updated successfuly",
                     StatusCode = 204
                 };
@@ -58,7 +45,7 @@ namespace Blog.Application.Core.Comments.Handlers
             }
             catch (Exception ex)
             {
-                return response = new CommentCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = false,
                     Message = ex.Message,

@@ -1,14 +1,14 @@
 ﻿using Blog.Application.Core.Posts.Commands;
-using Blog.Application.Core.Posts.Response;
 using Blog.Domain.Core.Entities;
 using Blog.Application.Core.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Blog.Domain.Core.Uploads;
+using Blog.Application.Response;
 
 namespace Blog.Application.Core.Posts.Handlers
 {
-    public class PostRemoveCommandHandler : IRequestHandler<PostRemoveCommand, PostCommandResponse>
+    public class PostRemoveCommandHandler : IRequestHandler<PostRemoveCommand, ResponseBase>
     {
         private readonly IPostRepository _postRepository;
         private readonly IAuthorizationService _authorizationService;
@@ -23,9 +23,9 @@ namespace Blog.Application.Core.Posts.Handlers
             _fileHandler = fileHandler;
         }
 
-        public async Task<PostCommandResponse> Handle(PostRemoveCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(PostRemoveCommand request, CancellationToken cancellationToken)
         {
-            PostCommandResponse response;
+            ResponseBase response;
 
             try
             {
@@ -33,14 +33,14 @@ namespace Blog.Application.Core.Posts.Handlers
 
                 AuthorizationResult result = await _authorizationService.AuthorizeAsync(request.GetClaimsPrincipal(), post, "DeletePost");
 
-                if (!result.Succeeded) return response = new PostCommandResponse
+                if (!result.Succeeded) return response = new ResponseBase
                 {
                     StatusCode = 401,
                     Message = "Unathorized",
                     IsValid = false
                 };
 
-                if (post == null) return response = new PostCommandResponse
+                if (post == null) return response = new ResponseBase
                 {
                     StatusCode = 404,
                     Message = "Resource not found"
@@ -53,7 +53,7 @@ namespace Blog.Application.Core.Posts.Handlers
 
                 await _fileHandler.DeleteFileAsync("Uploads/Posts/",filePath);
 
-                return response = new PostCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = true,
                     StatusCode = 200,
@@ -62,7 +62,7 @@ namespace Blog.Application.Core.Posts.Handlers
             }
             catch (Exception ex)
             {
-                return response = new PostCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 500,

@@ -83,15 +83,17 @@ namespace Blog.Api.Controllers
                 case StatusCodes.Status200OK:
                     return Ok(response);
                 case StatusCodes.Status201Created:
-                    return Created(response.Message, response);
+                    return Created(String.Empty, response);
                 case StatusCodes.Status204NoContent:
-                    return StatusCode(StatusCodes.Status204NoContent);
+                    return Created(String.Empty, response);
                 case StatusCodes.Status400BadRequest:
                     return BadRequest(response);
                 case StatusCodes.Status401Unauthorized:
                     return Unauthorized(response);
                 case StatusCodes.Status500InternalServerError:
                     return StatusCode(StatusCodes.Status500InternalServerError);
+                case StatusCodes.Status404NotFound:
+                    return NotFound(response);
                 default:
                     return UnprocessableEntity("Unprocessable entity");
             }

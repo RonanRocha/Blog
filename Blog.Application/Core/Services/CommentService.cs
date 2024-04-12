@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Application.Core.Comments.Queries;
 using Blog.Application.Core.Comments.Commands;
-using Blog.Application.Core.Comments.Response;
 using Blog.Application.Core.Services.Interfaces;
 using Blog.Application.Core.ViewModels;
 using Blog.Domain.Core.Entities;
@@ -23,17 +22,17 @@ namespace Blog.Application.Core.Services
             _mapper = mapper;
         }
 
-        public async Task<CommentCommandResponse> AddAsync(CommentCreateCommand command)
+        public async Task<ResponseBase> AddAsync(CommentCreateCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        public async Task<CommentCommandResponse> UpdateAsync(CommentUpdateCommand command)
+        public async Task<ResponseBase> UpdateAsync(CommentUpdateCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        public async Task<CommentCommandResponse> RemoveAsync(CommentRemoveCommand command)
+        public async Task<ResponseBase> RemoveAsync(CommentRemoveCommand command)
         {
             return await _mediator.Send(command);
         }

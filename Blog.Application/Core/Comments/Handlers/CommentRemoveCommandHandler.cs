@@ -1,12 +1,12 @@
 ﻿using Blog.Application.Core.Comments.Commands;
-using Blog.Application.Core.Comments.Response;
+using Blog.Application.Response;
 using Blog.Domain.Core.Entities;
 using Blog.Domain.Core.Repositories;
 using MediatR;
 
 namespace Blog.Application.Core.Comments.Handlers
 {
-    public class CommentRemoveCommandHandler : IRequestHandler<CommentRemoveCommand, CommentCommandResponse>
+    public class CommentRemoveCommandHandler : IRequestHandler<CommentRemoveCommand, ResponseBase>
     {
         private readonly ICommentRepository _commentRepository;
 
@@ -15,15 +15,15 @@ namespace Blog.Application.Core.Comments.Handlers
             _commentRepository = commentRepository;
         }
 
-        public async Task<CommentCommandResponse> Handle(CommentRemoveCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(CommentRemoveCommand request, CancellationToken cancellationToken)
         {
-            CommentCommandResponse response;
+            ResponseBase response;
 
             try
             {
                 Comment comment = await _commentRepository.GetById(request.Id);
 
-                if (comment == null) return response = new CommentCommandResponse
+                if (comment == null) return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 404,
@@ -32,7 +32,7 @@ namespace Blog.Application.Core.Comments.Handlers
 
                 await _commentRepository.RemoveAsync(comment);
 
-                return response = new CommentCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = true,
                     StatusCode = 200,
@@ -42,7 +42,7 @@ namespace Blog.Application.Core.Comments.Handlers
             }
             catch (Exception ex)
             {
-                return response = new CommentCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 500,

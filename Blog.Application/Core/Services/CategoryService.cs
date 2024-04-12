@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Blog.Application.Core.Categories.Commands;
 using Blog.Application.Core.Categories.Queries;
-using Blog.Application.Core.Categories.Response;
 using Blog.Application.Core.Services.Interfaces;
 using Blog.Application.Core.ViewModels;
-using Blog.Domain.Core.Entities;
+using Blog.Application.Response;
 using MediatR;
 
 namespace Blog.Application.Core.Services
@@ -20,7 +19,7 @@ namespace Blog.Application.Core.Services
             _mapper = mapper;
         }
 
-        public async Task<CategoryCommandResponse> AddAsync(CategoryCreateCommand command)
+        public async Task<ResponseBase> AddAsync(CategoryCreateCommand command)
         {
            return  await _mediator.Send(command);
         }
@@ -37,12 +36,12 @@ namespace Blog.Application.Core.Services
             return _mapper.Map<CategoryViewModel>(category);    
         }
 
-        public async Task<CategoryCommandResponse> RemoveAsync(CategoryRemoveCommand command)
+        public async Task<ResponseBase> RemoveAsync(CategoryRemoveCommand command)
         {
            return await _mediator.Send(command);
         }
 
-        public async Task<CategoryCommandResponse> UpdateAsync(CategoryUpdateCommand command)
+        public async Task<ResponseBase> UpdateAsync(CategoryUpdateCommand command)
         {
             return await _mediator.Send(command);
         }

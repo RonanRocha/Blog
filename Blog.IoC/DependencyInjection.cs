@@ -4,7 +4,6 @@ using Blog.Application.Mappings;
 using Blog.Domain.Account.Services;
 using Blog.Domain.Core.Entities;
 using Blog.Application.Core.Repositories;
-using Blog.Domain.Core.Validation;
 using Blog.Infrastructure.Data.Account.Services;
 using Blog.Infrastructure.Data.Context;
 using Blog.Infrastructure.Data.Repositories;
@@ -21,6 +20,9 @@ using Blog.Domain.Core.Repositories;
 using Blog.Domain.Core.Uploads;
 using Blog.Application.Utils;
 using Microsoft.AspNetCore.Http;
+using Blog.Application.Core.Posts.Validators;
+using MediatR;
+using Blog.Application.Pipelines;
 
 
 namespace Blog.IoC
@@ -55,7 +57,8 @@ namespace Blog.IoC
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IFileHandler, FileHandler>();
             services.AddScoped<IEmailService,EmailService>();
-            services.AddValidatorsFromAssemblyContaining<PostValidation>();
+            
+            //services.AddValidatorsFromAssemblyContaining<PostCreateCommandValidator>();
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -67,8 +70,21 @@ namespace Blog.IoC
                 return new UriService(uri);
             });
 
-            var handlers = AppDomain.CurrentDomain.Load("Blog.Application");
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(handlers));
+            var assembly = AppDomain.CurrentDomain.Load("Blog.Application");
+
+            AssemblyScanner
+            .FindValidatorsInAssembly(assembly)
+            .ForEach(result => services.AddScoped(result.InterfaceType, result.ValidatorType));
+
+
+        
+
+
+
+            services.AddMediatR(cfg => {
+                cfg.RegisterServicesFromAssembly(assembly);
+                cfg.AddOpenBehavior(typeof(ValidationRequestBehavior<,>));
+            });
 
 
             services.AddAuthentication(opt =>

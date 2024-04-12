@@ -1,5 +1,4 @@
 ﻿using Blog.Application.Core.Comments.Commands;
-using Blog.Application.Core.Comments.Response;
 using Blog.Application.Core.Services.Interfaces;
 using Blog.Application.Core.ViewModels;
 using Blog.Application.Filters;
@@ -38,17 +37,17 @@ namespace Blog.Api.Controllers
         {
             command.AddAuthenticatedUser(User);
 
-            CommentCommandResponse response =  await _commentService.AddAsync(command);
+            ResponseBase response =  await _commentService.AddAsync(command);
 
             return GetActionResult(response);
           
         }
 
         [HttpPut("{id:int}")]
-        [Authorize(Policy="EditComment")]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] CommentUpdateCommand command , int id)
         {
-            if (id != command.Id  && id <= 0) 
+            if (id != command.Id  || id <= 0) 
                 return BadRequest("Validation Error");
 
             command.AddAuthenticatedUser(User);
@@ -59,7 +58,7 @@ namespace Blog.Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        [Authorize(Policy="RemoveComment")]
+        [Authorize]
         public async Task<IActionResult> Remove(int id)
         {
             if (id <= 0 ) 
@@ -77,17 +76,17 @@ namespace Blog.Api.Controllers
                 case StatusCodes.Status200OK:
                     return Ok(response);
                 case StatusCodes.Status201Created:
-                    return Created(response.Message, response);
+                    return Created(String.Empty, response);
                 case StatusCodes.Status204NoContent:
-                    return StatusCode(StatusCodes.Status204NoContent, response);
+                    return Created(String.Empty, response);
                 case StatusCodes.Status400BadRequest:
                     return BadRequest(response);
                 case StatusCodes.Status401Unauthorized:
                     return Unauthorized(response);
-                case StatusCodes.Status404NotFound:
-                    return NotFound(response);
                 case StatusCodes.Status500InternalServerError:
                     return StatusCode(StatusCodes.Status500InternalServerError);
+                case StatusCodes.Status404NotFound:
+                    return NotFound(response);
                 default:
                     return UnprocessableEntity("Unprocessable entity");
             }
