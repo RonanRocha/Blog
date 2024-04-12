@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using Blog.Application.Core.Posts.Response;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Blog.Application.Response;
 
 namespace Blog.Application.Core.Posts.Commands
 {
-    public class PostCommand : IRequest<PostCommandResponse>
+    public class PostCommand : IRequest<ResponseBase>
     {
 
         public PostCommand()

@@ -1,5 +1,4 @@
 ﻿using Blog.Application.Core.Posts.Commands;
-using Blog.Application.Core.Posts.Response;
 using Blog.Application.Core.ViewModels;
 using Blog.Application.Filters;
 using Blog.Application.Response;
@@ -12,8 +11,8 @@ namespace Blog.Application.Core.Services.Interfaces
     {
         Task<PagedResponse<List<PostViewModel>>> GetPostsAsync(PaginationFilter filter);
         Task<PostViewModel> GetByIdAsync(int id);
-        Task<PostCommandResponse> AddAsync(PostCreateCommand command);
-        Task<PostCommandResponse> UpdateAsync(PostUpdateCommand command);
-        Task<PostCommandResponse> RemoveAsync(PostRemoveCommand command);
+        Task<ResponseBase> AddAsync(PostCreateCommand command);
+        Task<ResponseBase> UpdateAsync(PostUpdateCommand command);
+        Task<ResponseBase> RemoveAsync(PostRemoveCommand command);
     }
 }

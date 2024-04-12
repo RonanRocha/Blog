@@ -1,11 +1,16 @@
-﻿using Blog.Domain.Core.Entities;
+﻿using Blog.Application.Core.Comments.Commands;
 using FluentValidation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Blog.Domain.Core.Validation
+namespace Blog.Application.Core.Comments.Validators
 {
-    public class CommentValidator : AbstractValidator<Comment>
+    public class CommentCreateCommandValidator : AbstractValidator<CommentCreateCommand>
     {
-        public CommentValidator()
+        public CommentCreateCommandValidator()
         {
             RuleFor(x => x.Message)
                 .NotEmpty().NotNull()
@@ -14,7 +19,6 @@ namespace Blog.Domain.Core.Validation
 
             RuleFor(x => x.UserId).NotEmpty().NotNull().WithMessage("UserId is required");
             RuleFor(x => x.PostId).NotEmpty().NotNull().WithMessage("PostId is required");
-
         }
     }
 }

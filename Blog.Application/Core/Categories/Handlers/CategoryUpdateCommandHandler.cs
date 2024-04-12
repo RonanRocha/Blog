@@ -1,54 +1,41 @@
 ﻿using Blog.Application.Core.Categories.Commands;
-using Blog.Application.Core.Categories.Response;
+using Blog.Application.Response;
 using Blog.Domain.Core.Entities;
 using Blog.Domain.Core.Repositories;
-using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 
 namespace Blog.Application.Core.Categories.Handlers
 {
-    public class CategoryUpdateCommandHandler : IRequestHandler<CategoryUpdateCommand, CategoryCommandResponse>
+    public class CategoryUpdateCommandHandler : IRequestHandler<CategoryUpdateCommand, ResponseBase>
     {
-        private readonly IValidator<Category> _validator;
         private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryUpdateCommandHandler(IValidator<Category> validator, ICategoryRepository categoryRepository)
+        public CategoryUpdateCommandHandler( ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
-            _validator = validator;
         }
 
-        public async Task<CategoryCommandResponse> Handle(CategoryUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(CategoryUpdateCommand request, CancellationToken cancellationToken)
         {
-            CategoryCommandResponse response;
+            ResponseBase response;
             try
             {
                 Category category = await _categoryRepository.GetById(request.Id);
 
-                if (category == null) return response = new CategoryCommandResponse
+                if (category == null) return response = new ResponseBase
                 {
                     StatusCode = 404,
                     Message = "Resource not found",
                     IsValid = false
                 };
 
-                ValidationResult vr = await _validator.ValidateAsync(category);
-
-                if (!vr.IsValid) return response = new CategoryCommandResponse
-                {
-                    IsValid = vr.IsValid,
-                    StatusCode = 400,
-                    Message = "Validation error",
-                    Errors = vr.ToDictionary()
-                };
 
                 category.UpdateCategory(request.Name);
 
                 await _categoryRepository.Update(category);
 
-                return response = new CategoryCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = true,
                     StatusCode = 204,
@@ -57,7 +44,7 @@ namespace Blog.Application.Core.Categories.Handlers
 
             }catch (Exception ex)
             {
-                return response = new CategoryCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 500,

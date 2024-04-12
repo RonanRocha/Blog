@@ -1,5 +1,4 @@
 ﻿using Blog.Application.Core.Posts.Commands;
-using Blog.Application.Core.Posts.Response;
 using Blog.Application.Core.Services.Interfaces;
 using Blog.Application.Core.ViewModels;
 using Blog.Application.Filters;
@@ -25,7 +24,7 @@ namespace Blog.Api.Controllers
         public async Task<IActionResult> Create([FromForm] PostCreateCommand command)
         {
              command.AddAuthenticatedUser(User);
-             PostCommandResponse response = await  _postService.AddAsync(command);
+             var response = await  _postService.AddAsync(command);
              return GetActionResult(response);         
         }
 
@@ -55,12 +54,12 @@ namespace Blog.Api.Controllers
         [Authorize(Roles = "Publisher")]
         public async Task<IActionResult> Update([FromForm] PostUpdateCommand command, int id)
         {
-            if (command.Id != id && id <= 0) 
+            if (command.Id != id || id <= 0) 
                 return BadRequest("Validation error");
 
             command.AddAuthenticatedUser(User);
 
-            PostCommandResponse response = await _postService.UpdateAsync(command);
+            ResponseBase response = await _postService.UpdateAsync(command);
 
             return GetActionResult(response);
         }
@@ -71,8 +70,8 @@ namespace Blog.Api.Controllers
         {
             if (id <= 0) 
                 return BadRequest("Validation Error");
-            
-            PostCommandResponse response =  await _postService.RemoveAsync(new PostRemoveCommand(id, User));
+
+            ResponseBase response =  await _postService.RemoveAsync(new PostRemoveCommand(id, User));
 
             return GetActionResult(response);
         }

@@ -1,10 +1,10 @@
-﻿using Blog.Application.Core.Posts.Response;
+﻿using Blog.Application.Response;
 using MediatR;
 using System.Security.Claims;
 
 namespace Blog.Application.Core.Posts.Commands
 {
-    public class PostRemoveCommand : IRequest<PostCommandResponse>
+    public class PostRemoveCommand : IRequest<ResponseBase>
     {
         public PostRemoveCommand(int id, ClaimsPrincipal user)
         {

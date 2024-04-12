@@ -1,50 +1,38 @@
 ﻿using Blog.Application.Core.Comments.Commands;
-using Blog.Application.Core.Comments.Response;
+using Blog.Application.Response;
 using Blog.Domain.Core.Entities;
 using Blog.Domain.Core.Repositories;
-using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 namespace Blog.Application.Core.Comments.Handlers
 {
-    public class CommentCreateCommandHandler : IRequestHandler<CommentCreateCommand, CommentCommandResponse>
+    public class CommentCreateCommandHandler : IRequestHandler<CommentCreateCommand, ResponseBase>
     {
         private readonly ICommentRepository _commentRepository;
-        private readonly IValidator<Comment> _validator;
 
 
-        public CommentCreateCommandHandler(ICommentRepository commentRepository, IValidator<Comment> validator)
+
+        public CommentCreateCommandHandler(ICommentRepository commentRepository)
         {
-            _validator = validator;
             _commentRepository = commentRepository;
         }
 
-        public async Task<CommentCommandResponse> Handle(CommentCreateCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(CommentCreateCommand request, CancellationToken cancellationToken)
         {
-            CommentCommandResponse response;
+            ResponseBase response;
 
             try
             {
 
                 Comment comment = new Comment(userId: request.UserId, postId: request.PostId, message: request.Message);
 
-                ValidationResult vr = await _validator.ValidateAsync(comment);
-
-                if (!vr.IsValid) return response = new CommentCommandResponse
-                {
-                    IsValid = vr.IsValid,
-                    StatusCode = 400,
-                    Message = "Validation error",
-                    Errors = vr.ToDictionary()
-                };
 
                 await _commentRepository.Save(comment);
 
-                return response = new CommentCommandResponse
+                return response = new ResponseBase
                 {
 
-                    IsValid = vr.IsValid,
+                    IsValid = true,
                     Message = "Comment created successfuly",
                     StatusCode = 201,
 
@@ -53,7 +41,7 @@ namespace Blog.Application.Core.Comments.Handlers
             }
             catch (Exception ex)
             {
-                return response = new CommentCommandResponse
+                return response = new ResponseBase
                 {
                     IsValid = false,
                     StatusCode = 500,

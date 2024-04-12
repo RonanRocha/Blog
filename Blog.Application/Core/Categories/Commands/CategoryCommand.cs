@@ -1,10 +1,10 @@
-﻿using Blog.Application.Core.Categories.Response;
+﻿using Blog.Application.Response;
 using MediatR;
 using System.Security.Claims;
 
 namespace Blog.Application.Core.Categories.Commands
 {
-    public class CategoryCommand : IRequest<CategoryCommandResponse>
+    public class CategoryCommand : IRequest<ResponseBase>
     {
         public string Name { get; set; }
         private ClaimsPrincipal ClaimsPrincipal { get; set; }
