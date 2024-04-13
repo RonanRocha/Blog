@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Http;
 using Blog.Application.Core.Posts.Validators;
 using MediatR;
 using Blog.Application.Pipelines;
+using Hangfire;
 
 
 namespace Blog.IoC
@@ -57,7 +58,20 @@ namespace Blog.IoC
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IFileHandler, FileHandler>();
             services.AddScoped<IEmailService,EmailService>();
-            
+
+
+            services.AddHangfire(options =>
+            {
+                options.UseSqlServerStorage(configuration
+                          .GetConnectionString("HangFireConnection"));
+               
+            });
+
+            services.AddHangfireServer(options =>
+            {
+                options.Queues = new string[] { "resetpasswordqueue", "confirmemailqueue", "mfaqueue" };
+            });
+
             //services.AddValidatorsFromAssemblyContaining<PostCreateCommandValidator>();
             services.AddAutoMapper(typeof(MappingProfile));
 

@@ -14,6 +14,8 @@ namespace Blog.Domain.Account.Services
         Task<IList<Claim>> GetClaimsAsync(User user);
         Task<IList<string>> GetRolesAsync(User user);
         Task<SignInResult> LoginMfaAsync(string code, string provider);
+        Task ResetPasswordAsync(string email);
+        Task<IdentityResult> ChangePasswordAsync(string email, string password, string token);
         Task LogoutAsync();
     }
 }
