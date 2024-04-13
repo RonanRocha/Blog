@@ -3,6 +3,9 @@ using Blog.Domain.Account.Services;
 using Blog.Domain.Account.Entities;
 using Blog.Domain.Core.Entities;
 using Blog.Application.Account.Commands;
+using System.Security.Policy;
+using Hangfire;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Api.Controllers
 {
@@ -24,8 +27,8 @@ namespace Blog.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
 
-            if (String.IsNullOrEmpty(command.Password) || String.IsNullOrEmpty(command.Email))
-                return BadRequest("Failed login attempt");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Select(x => x.Value?.Errors));
 
             Microsoft.AspNetCore.Identity.SignInResult result = await _authenticationService.AuthenticateAsync(command.Email, command.Password);
 
@@ -49,8 +52,8 @@ namespace Blog.Api.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
-            if (String.IsNullOrEmpty(command.Password) || String.IsNullOrEmpty(command.Email))
-                return BadRequest("Failed register attempt");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Select(x => x.Value?.Errors));
 
             var result = await _authenticationService.RegisterUserAsync(command.Name, command.Email, command.Password);
 
@@ -74,18 +77,53 @@ namespace Blog.Api.Controllers
         }
 
         [HttpPost("LoginMfa")]
-        public async Task<IActionResult> LoginMfa(string code, string email)
+        public async Task<IActionResult> LoginMfa([FromBody] LoginMfaCommand command)
         {
-            if (String.IsNullOrEmpty(code))
-                return BadRequest("Failed to login");
+            if (ModelState.IsValid)
+            {
+                var result = await _authenticationService.LoginMfaAsync(command.Code, "Email");
 
-            var result = await _authenticationService.LoginMfaAsync(code, "Email");
+                if (!result.Succeeded) return BadRequest("Failed login attenpt");
 
-            if (!result.Succeeded) return BadRequest("Failed login attenpt");
+                User user = await _authenticationService.GetUserAsync(command.Email);
+                UserToken userToken = await _tokenService.GenerateTokenAsync(user);
+                return Ok(userToken);
+            }
 
-            User user = await _authenticationService.GetUserAsync(email);
-            UserToken userToken = await _tokenService.GenerateTokenAsync(user);
-            return Ok(userToken);
+            return BadRequest("Failed login attenpt");
+
+        }
+
+        [HttpPost("ForgotPassword")]
+        public IActionResult ForgotPassword([FromBody] ForgotPasswordCommand command)
+        {
+
+            if (ModelState.IsValid)
+            {
+                BackgroundJob.Enqueue("resetpasswordqueue", () =>
+                         _authenticationService.ResetPasswordAsync(command.Email)
+                );
+            }
+
+            return Ok("Instructions to change password as sent to email");
+        }
+
+        [HttpGet("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(string token, string email)
+        {
+            return Ok(new { token = token, email = email });
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ResetPasswordCommand command)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Select(x => x.Value?.Errors));
+
+            IdentityResult result = await _authenticationService.ChangePasswordAsync(command.Email, command.Password, command.Token);
+            if (!result.Succeeded) return BadRequest("Something is wrong");
+            return Ok("Password changed successfuly");
 
         }
     }

@@ -3,6 +3,12 @@ using Blog.Domain.Account.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Blog.Domain.Account.Entities;
+using Hangfire;
+using Azure.Core;
+using System.Security.Policy;
+using Microsoft.Extensions.Configuration;
+using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Blog.Infrastructure.Data.Account.Services
 {
@@ -15,11 +21,14 @@ namespace Blog.Infrastructure.Data.Account.Services
 
         private readonly IEmailService _emailService;
 
-        public AuthenticationService(UserManager<User> userManager, SignInManager<User> signInManager, IEmailService emailService)
+        private readonly IConfiguration _configuration;
+
+        public AuthenticationService(UserManager<User> userManager, SignInManager<User> signInManager, IEmailService emailService, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
+            _configuration = configuration;
         }
 
         public async Task<SignInResult> AuthenticateAsync(string email, string password)
@@ -42,7 +51,12 @@ namespace Blog.Infrastructure.Data.Account.Services
                     if (signInResult.RequiresTwoFactor)
                     {
                         var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-                        _emailService.Send(user.Email, "Cofirm code", $" this is your token {token}");
+
+                        BackgroundJob.Enqueue("mfaqueue", () =>
+                            _emailService.Send(user.Email, "Cofirm code", $" this is your token {token}")
+                        );
+
+
                         return signInResult;
                     }
 
@@ -85,9 +99,9 @@ namespace Blog.Infrastructure.Data.Account.Services
 
         public async Task<SignInResult> LoginMfaAsync(string code, string provider)
         {
-            
-           return  await _signInManager.TwoFactorSignInAsync(provider, code, false, false);
-            
+
+            return await _signInManager.TwoFactorSignInAsync(provider, code, false, false);
+
         }
 
         public async Task LogoutAsync()
@@ -121,7 +135,10 @@ namespace Blog.Infrastructure.Data.Account.Services
                     var user = await _userManager.FindByEmailAsync(applicationUser.Email);
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    _emailService.Send(user.Email, "Cofirm email", $" this is your token {token}");
+                    BackgroundJob.Enqueue("confirmemailqueue", () =>
+                     _emailService.Send(user.Email, "Cofirm email", $" this is your token {token}")
+                    );
+
 
                 }
 
@@ -130,6 +147,61 @@ namespace Blog.Infrastructure.Data.Account.Services
             catch (Exception ex)
             {
                 return false;
+            }
+
+        }
+
+        public async Task ResetPasswordAsync(string email)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(email)) await Task.CompletedTask; ;
+
+                User user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null) await Task.CompletedTask;
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var host = _configuration["BaseHost"];
+
+                var link = $"{host}/api/authentication/resetpassword?token={token}&email={user.Email}";
+
+
+                _emailService.Send(user.Email, "Recovery password", link);
+
+
+                await Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                await Task.CompletedTask;
+            }
+
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(string email, string password, string token)
+        {
+            IdentityResult result;
+
+            try
+            {
+                User user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null)
+                {
+                    var errors = new List<IdentityError>();
+                    errors.Add(new IdentityError { Code = "InvalidEmail", Description = "Invalid Email" });
+                    return result = IdentityResult.Failed(errors.ToArray());
+                }
+                return await _userManager.ResetPasswordAsync(user, token, password);
+
+            }
+            catch (Exception ex)
+            {
+                var errors = new List<IdentityError>();
+                errors.Add(new IdentityError { Code = "ChangePasswordExcpetion", Description = $"{ex.Message}" });
+                return result = IdentityResult.Failed(errors.ToArray());
             }
 
         }
