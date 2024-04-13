@@ -35,7 +35,8 @@ Abaixo um exemplo de como configurar seu secret | appsettings.json
  ```
  {
    "ConnectionStrings": {
-    "DefaultConnection": "Server=Host,Port;Database=DatabaseName;User Id=User;Password=YourPassword;TrustServerCertificate=True"
+    "DefaultConnection": "Server=Host,Port;Database=DatabaseName;User Id=User;Password=YourPassword;TrustServerCertificate=True",
+    "HangFireConnection": "Server=Host,Port;Database=DatabaseHangFireName;User Id=User;Password=YourPassword;TrustServerCertificate=True"
   },
   "Jwt": {
     "SecretKey": "YOUR SECRET KEY",
