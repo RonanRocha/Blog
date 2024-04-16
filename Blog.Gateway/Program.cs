@@ -26,11 +26,18 @@ builder.Services.AddAuthentication()
         };
     });
 
+builder.Services.AddSwaggerForOcelot(builder.Configuration);
+
 
 builder.Services.AddOcelot();
 
 builder.Configuration.AddJsonFile("ocelot.json");
 var app = builder.Build();
+
+app.UseSwaggerForOcelotUI(opt =>
+{
+    opt.PathToSwaggerGenerator = "/swagger/docs";
+});
 
 
 app.UseOcelot().Wait();

@@ -10,7 +10,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/authentication/login",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/authentication/register",
@@ -22,7 +23,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/authentication/register",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/authentication/loginmfa",
@@ -34,7 +36,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/authentication/loginmfa",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/authentication/forgotpassword",
@@ -46,7 +49,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/authentication/forgotpassword",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/authentication/changepassword",
@@ -58,7 +62,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/authentication/changepassword",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/authentication/resetpassword",
@@ -70,7 +75,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/authentication/resetpassword",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Blog.API"
     },
 
     {
@@ -83,7 +89,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/authentication/confirmemail?{everything}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Blog.API"
     },
 
     {
@@ -96,7 +103,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/categories/",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/categories/{id}",
@@ -108,7 +116,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/categories/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/posts/",
@@ -120,7 +129,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/posts/",
-      "UpstreamHttpMethod": [ "POST", "GET" ]
+      "UpstreamHttpMethod": [ "POST", "GET" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/posts/{id}",
@@ -132,7 +142,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/posts/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/comments/{id}",
@@ -144,7 +155,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/comments/{id}",
-      "UpstreamHttpMethod": [ "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/comments/",
@@ -156,7 +168,8 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/comments/",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
     },
     {
       "DownstreamPathTemplate": "/api/comments/post/{id}",
@@ -168,7 +181,20 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/comments/post/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Blog.API"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "Blog.API",
+      "Config": [
+        {
+          "Name": "Blog API",
+          "Version": "v1",
+          "Url": "https://localhost:7093/swagger/v1/swagger.json"
+        }
+      ]
     }
   ],
   "GlobalConfiguration": {
