@@ -1,0 +1,203 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/authentication/login",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/authentication/login",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/authentication/register",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/authentication/register",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/authentication/loginmfa",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/authentication/loginmfa",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/authentication/forgotpassword",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/authentication/forgotpassword",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/authentication/changepassword",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/authentication/changepassword",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/authentication/resetpassword",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/authentication/resetpassword",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Blog.API"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/authentication/confirmemail?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/authentication/confirmemail?{everything}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Blog.API"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/categories/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/categories/",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/categories/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/categories/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/posts/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/posts/",
+      "UpstreamHttpMethod": [ "POST", "GET" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/posts/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/posts/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/comments/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/comments/{id}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/comments/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/comments/",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Blog.API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/comments/post/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7093
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/comments/post/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Blog.API"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "Blog.API",
+      "Config": [
+        {
+          "Name": "Blog API",
+          "Version": "v1",
+          "Url": "https://localhost:7093/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7268"
+  }
+}

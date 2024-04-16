@@ -40,12 +40,17 @@ namespace Blog.IoC
                                       typeof(BlogDbContext).Assembly.FullName))
             );
 
-            services.AddIdentity<User, IdentityRole>( x =>
-            {
-                x.SignIn.RequireConfirmedEmail = true;
-            })
+                services.AddIdentity<User, IdentityRole>( x =>
+                {
+                    x.SignIn.RequireConfirmedEmail = true;
+                })
                 .AddEntityFrameworkStores<BlogDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(24); // Define o tempo de vida do token como 2 horas
+            });
 
             services.AddScoped<ISeedAccountService, SeedAccountService>();
             services.AddScoped<ICategoryService, CategoryService>();
@@ -91,10 +96,6 @@ namespace Blog.IoC
             .ForEach(result => services.AddScoped(result.InterfaceType, result.ValidatorType));
 
 
-        
-
-
-
             services.AddMediatR(cfg => {
                 cfg.RegisterServicesFromAssembly(assembly);
                 cfg.AddOpenBehavior(typeof(ValidationRequestBehavior<,>));
@@ -108,6 +109,7 @@ namespace Blog.IoC
 
             }).AddJwtBearer(options =>
             {
+                options.Authority = configuration["Jwt:Authority"];
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
