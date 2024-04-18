@@ -12,8 +12,7 @@ namespace Blog.Infrastructure.Data.Mappings
 
             builder.Property(x => x.UserId).IsRequired();
 
-            builder.Property(x => x.CategoryId)
-                   .IsRequired();
+            builder.Property(x => x.CategoryId);
 
             builder.Property(x => x.Image)
                    .HasMaxLength(2083)
