@@ -20,8 +20,7 @@ namespace Blog.Infrastructure.Data.Mappings
             builder.HasMany(x => x.Posts)
                    .WithOne(x => x.Category)
                    .HasForeignKey(x => x.CategoryId)
-                   .IsRequired()
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

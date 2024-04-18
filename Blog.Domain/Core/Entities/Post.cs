@@ -4,7 +4,7 @@ namespace Blog.Domain.Core.Entities
 {
     public class Post : Entity
     {
-        public Post(string userId, int categoryId, string image, string title, string content)
+        public Post(string userId, int? categoryId, string image, string title, string content)
         {
             ValidatePost(userId, categoryId, image, title, content);
 
@@ -17,7 +17,7 @@ namespace Blog.Domain.Core.Entities
         }
 
         public string UserId { get; private set; }
-        public int CategoryId { get; private set; }
+        public int? CategoryId { get; private set; }
         public string Image { get; private set; }
         public string Title { get; private set; }
         public string Content { get; private set; }
@@ -25,7 +25,7 @@ namespace Blog.Domain.Core.Entities
         public List<Comment> Comments { get; set; }
         public Category Category { get; set; }
 
-        public void UpdatePost(string userId, int categoryId, string image, string title, string content)
+        public void UpdatePost(string userId, int? categoryId, string image, string title, string content)
         {
 
             ValidatePost(userId, categoryId, image, title, content);
@@ -41,7 +41,7 @@ namespace Blog.Domain.Core.Entities
 
         }
 
-        private void ValidatePost(string userId, int categoryId, string image, string title, string content)
+        private void ValidatePost(string userId, int? categoryId, string image, string title, string content)
         {
             DomainValidationException.When(string.IsNullOrEmpty(userId), "UserId is required");
             DomainValidationException.When(categoryId <= 0, "CategoryId must be a positive number");

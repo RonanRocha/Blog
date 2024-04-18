@@ -14,8 +14,6 @@ namespace Blog.Infrastructure.Data.Repositories
         public async Task RemoveAsync(Category category)
         {
             var categoryDatabase = await _ctx.Categories
-                .Include(x => x.Posts)
-                .ThenInclude(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == category.Id);
 
             _ctx.Categories.Remove(categoryDatabase);

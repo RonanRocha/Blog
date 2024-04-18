@@ -85,6 +85,12 @@ namespace Blog.Infrastructure.Data.Uploads
         }
         public async Task<UploadResult> UpdateImageAsync(string oldImage, IFormFile newImage)
         {
+            if(newImage == null) return new UploadResult 
+            {
+                IsValid = true,
+                UploadedPath = oldImage,
+            };
+
             var filePath = Path.GetFileName(oldImage);
             bool isDeleted = await DeleteFileAsync("Uploads/Posts/", filePath);
 
