@@ -89,7 +89,7 @@ namespace Blog.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -353,8 +353,7 @@ namespace Blog.Infrastructure.Data.Migrations
                     b.HasOne("Blog.Domain.Core.Entities.Category", "Category")
                         .WithMany("Posts")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Blog.Domain.Core.Entities.User", "User")
                         .WithMany("Posts")
