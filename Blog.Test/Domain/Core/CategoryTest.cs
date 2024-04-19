@@ -6,6 +6,24 @@ namespace Blog.Test.Domain.Core
 {
     public class CategoryTest
     {
+
+        public static IEnumerable<object[]> BadCategories = new List<object[]>
+        {
+            new object[] { "a" },
+            new object[] { "ab" },
+            new object[] { "" },
+            new object[] { null },
+            new object[] { @"Lorem ipsum dolor sit amet,
+                     consectetur adipiscing elit.
+                     Suspendisse quis tortor in mauris aliquet hendrerit quis sit amet risus.
+                     Vivamus molestie diam sed rhoncus tincidunt.
+                     Duis ut dolor sit amet arcu accumsan tristique.
+                     Curabitur sem sem, cursus vel in. "}
+         
+
+        };
+
+
         [Theory]
         [InlineData("Usuário")]
         [InlineData("Fulano de tal")]
@@ -16,17 +34,7 @@ namespace Blog.Test.Domain.Core
         }
 
         [Theory]
-        [InlineData("a")]
-        [InlineData("ab")]
-        [InlineData("ac")]
-        [InlineData("")]
-        [InlineData(null)]
-        [InlineData(@"Lorem ipsum dolor sit amet,
-                     consectetur adipiscing elit.
-                     Suspendisse quis tortor in mauris aliquet hendrerit quis sit amet risus.
-                     Vivamus molestie diam sed rhoncus tincidunt.
-                     Duis ut dolor sit amet arcu accumsan tristique.
-                     Curabitur sem sem, cursus vel in. ")]
+        [MemberData(nameof(BadCategories))]
         public void Category_Constructor_Should_Throw_Exception(string name)
         {
             Action a = () => new Category(name);
@@ -46,17 +54,7 @@ namespace Blog.Test.Domain.Core
         }
 
         [Theory]
-        [InlineData("a")]
-        [InlineData("ab")]
-        [InlineData("ac")]
-        [InlineData("")]
-        [InlineData(null)]
-        [InlineData(@"Lorem ipsum dolor sit amet,
-                     consectetur adipiscing elit.
-                     Suspendisse quis tortor in mauris aliquet hendrerit quis sit amet risus.
-                     Vivamus molestie diam sed rhoncus tincidunt.
-                     Duis ut dolor sit amet arcu accumsan tristique.
-                     Curabitur sem sem, cursus vel in. ")]
+        [MemberData(nameof (BadCategories))]
         public void Category_Update_Should_Throw_Exception(string name)
         {
             Category category = new Category("Nova categoria");
@@ -67,17 +65,7 @@ namespace Blog.Test.Domain.Core
         }
 
         [Theory]
-        [InlineData("a")]
-        [InlineData("ab")]
-        [InlineData("ac")]
-        [InlineData("")]
-        [InlineData(null)]
-        [InlineData(@"Lorem ipsum dolor sit amet,
-                     consectetur adipiscing elit.
-                     Suspendisse quis tortor in mauris aliquet hendrerit quis sit amet risus.
-                     Vivamus molestie diam sed rhoncus tincidunt.
-                     Duis ut dolor sit amet arcu accumsan tristique.
-                     Curabitur sem sem, cursus vel in. ")]
+        [MemberData(nameof(BadCategories))]
         public void Category_Validate_Should_Throw_Exception(string name)
         {
             Category category = new Category("Nova categoria");
@@ -85,9 +73,6 @@ namespace Blog.Test.Domain.Core
             a.Should().Throw<DomainValidationException>();
 
         }
-
-   
-
 
     }
 }

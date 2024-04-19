@@ -6,6 +6,25 @@ namespace Blog.Test.Domain.Core
 {
     public  class CommentTest
     {
+
+        public static IEnumerable<object[]> BadComments => new List<object[]>
+        {
+            new object[] { "", 1, "Novo comentário" },
+            new object[] { "549884asd8454asd894asd165a4sd546a", 0, "Novo asdasd" },
+            new object[] { "16151asdasd9456a1sd91asd45123sd1a", 1, null },
+            new object[] { "549884asd8454asd894asd165a4sd546a", -1, "Novo asdasd" },
+            new object[] { "16151asdasd9456a1sd91asd45123sd1a", 1, "N" },
+            new object[] { "549884asd8454asd894asd165a4sd546a", 100, "No" },
+            new object[] { null, 1, "Novo comentário" },
+            new object[] { "549884asd8454asd894asd165a4sd546a", 100, @"Lorem ipsum dolor sit amet,
+                     consectetur adipiscing elit.
+                     Suspendisse quis tortor in mauris aliquet hendrerit quis sit amet risus.
+                     Vivamus molestie diam sed rhoncus tincidunt.
+                     Duis ut dolor sit amet arcu accumsan tristique.
+                     Curabitur sem sem, cursus vel in. "},
+        };
+
+
         [Theory]
         [InlineData("16151asdasd9456a1sd91asd45123sd1a", 1, "Novo comentário")]
         [InlineData("549884asd8454asd894asd165a4sd546a", 100, "Novo asdasd")]
@@ -20,19 +39,7 @@ namespace Blog.Test.Domain.Core
 
 
         [Theory]
-        [InlineData("", 1, "Novo comentário")]
-        [InlineData("549884asd8454asd894asd165a4sd546a", 0, "Novo asdasd")]
-        [InlineData("16151asdasd9456a1sd91asd45123sd1a", 1, null)]
-        [InlineData("549884asd8454asd894asd165a4sd546a", -1, "Novo asdasd")]
-        [InlineData("16151asdasd9456a1sd91asd45123sd1a", 1, "N")]
-        [InlineData("549884asd8454asd894asd165a4sd546a", 100, "No")]
-        [InlineData(null, 1, "Novo comentário")]
-        [InlineData("549884asd8454asd894asd165a4sd546a", 100, @"Lorem ipsum dolor sit amet,
-                     consectetur adipiscing elit.
-                     Suspendisse quis tortor in mauris aliquet hendrerit quis sit amet risus.
-                     Vivamus molestie diam sed rhoncus tincidunt.
-                     Duis ut dolor sit amet arcu accumsan tristique.
-                     Curabitur sem sem, cursus vel in. ")]
+        [MemberData(nameof(BadComments))]
         public void Comment_Construct_Should_Throw_Exception(string userId, int postId, string message)
         {
             Action action = () => new Comment(userId, postId, message);
@@ -40,19 +47,7 @@ namespace Blog.Test.Domain.Core
         }
 
         [Theory]
-        [InlineData("", 1, "Novo comentário")]
-        [InlineData("549884asd8454asd894asd165a4sd546a", 0, "Novo asdasd")]
-        [InlineData("16151asdasd9456a1sd91asd45123sd1a", 1, null)]
-        [InlineData("549884asd8454asd894asd165a4sd546a", -1, "Novo asdasd")]
-        [InlineData("16151asdasd9456a1sd91asd45123sd1a", 1, "N")]
-        [InlineData("549884asd8454asd894asd165a4sd546a", 100, "No")]
-        [InlineData(null, 1, "Novo comentário")]
-        [InlineData("549884asd8454asd894asd165a4sd546a", 100, @"Lorem ipsum dolor sit amet,
-                     consectetur adipiscing elit.
-                     Suspendisse quis tortor in mauris aliquet hendrerit quis sit amet risus.
-                     Vivamus molestie diam sed rhoncus tincidunt.
-                     Duis ut dolor sit amet arcu accumsan tristique.
-                     Curabitur sem sem, cursus vel in. ")]
+        [MemberData(nameof (BadComments))]
         public void Comment_Validate_Shoud_Throw_Exception(string userId, int postId, string message)
         {
             Comment comment = new Comment("5a1sd9as1das51", 1, "asdasdasdas");
