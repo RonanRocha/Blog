@@ -27,7 +27,7 @@ namespace Blog.Domain.Core.Entities
             UpdatedAt = DateTime.UtcNow;
         }
 
-        private void ValidateComment(string userId, int postId, string message)
+        public void ValidateComment(string userId, int postId, string message)
         {
             DomainValidationException.When(string.IsNullOrEmpty(userId), "UserId is required");
             DomainValidationException.When(postId <= 0 , "PostId must be positive");
