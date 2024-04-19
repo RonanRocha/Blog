@@ -22,7 +22,7 @@ namespace Blog.Domain.Core.Entities
             UpdatedAt = DateTime.UtcNow;    
         }
 
-        private void ValidateCategory (string name)
+        public  void ValidateCategory (string name)
         {
             DomainValidationException.When(String.IsNullOrEmpty(name), $"Name is required");
             DomainValidationException.When(name.Length < 3, $"Minimum 3 characters for name");
